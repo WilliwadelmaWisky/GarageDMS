@@ -1,5 +1,6 @@
 import { BiSave, BiPrinter, BiSearch, BiInfoCircle } from "react-icons/bi";
 import { GiMoneyStack } from "react-icons/gi";
+import Table from "../../components/table/table";
 
 export function WorkOrderView() {
     
@@ -12,6 +13,7 @@ export function WorkOrderView() {
                 <button><BiInfoCircle /></button>
                 <button><GiMoneyStack /></button>
             </div>
+            <Table/>
         </>
     )
 }
