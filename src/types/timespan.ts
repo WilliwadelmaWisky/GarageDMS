@@ -69,11 +69,11 @@ export class TimeSpan {
             throw new Error("value cannot be NaN");
         }
 
-        if (millis < TimeSpan.MIN_VALUE._millis) {
+        if (millis < 0) {
             throw new Error("value cannot be less than minimum");
         }
 
-        if (millis > TimeSpan.MAX_VALUE._millis) {
+        if (millis > 3600000000) {
              throw new Error("value cannot be greater than maximum");
         }
 

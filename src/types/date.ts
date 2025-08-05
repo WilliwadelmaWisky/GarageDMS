@@ -7,6 +7,8 @@ const MONTHS_IN_YEAR: number = 12;
  */
 export class Date {
 
+    public static get NULL(): Date { return new Date(0, 0, 0); }
+
     private _dayOfMonth: number;
     private _month: number;
     private _year: number;
@@ -176,5 +178,14 @@ export class Date {
      */
     public get year(): number { 
         return this._year; 
+    }
+
+
+    /**
+     * 
+     * @returns
+     */
+    public toString(): string {
+        return `${this.dayOfMonth}.${this.month}.${this.year.toString().slice(2, 4)}`
     }
 }
