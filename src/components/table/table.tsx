@@ -10,12 +10,13 @@ export function Table({ children }: Props) {
 
     return (
         <>
+            <input type='text' placeholder='Search...'/>
+            <button>Search</button>
             <table>
                 <tbody>
                     {children}
                 </tbody>
             </table>
-            <p>Total Price</p>
         </>
     )
 }

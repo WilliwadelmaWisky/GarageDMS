@@ -3,8 +3,8 @@ import { GiMoneyStack } from "react-icons/gi";
 import { Table } from "../../components/table/table";
 import { useState } from "react";
 import { Job, Row, WorkOrder } from "../../types/work-order";
-import { TimeSpan } from "../../types/timespan";
 import { TableBodyRow, TableHeaderRow } from "../../components/table/table-row";
+import { TableBodyInputItem, TableBodyLabelItem, TableBodySelectItem, TableHeaderItem } from "../../components/table/table-item";
 
 /**
  * 
@@ -33,6 +33,13 @@ function WorkOrderToolbar() {
     )
 }
 
+const ALL_TABLE_HEADERS = ["type", "seller", "title", "i. time", "c, time", "amount", "unit price", "discount %", "total price", "collected"];
+const ALL_SELLERS = ["P1", "P2", "P3"];
+
+/**
+ * 
+ * @returns 
+ */
 function WorkOrderTable() {
 
     const [workOrder, setWorkOrder] = useState<WorkOrder | null>(() => {
@@ -46,46 +53,35 @@ function WorkOrderTable() {
     });
 
     return (
-        <Table>
-            <TableHeaderRow 
-                elements={["type", "seller", "title", "i. time", "c, time", "amount", "unit price", "discount %", "total price", "collected"]}
-            />
-            {workOrder?.jobs.map((job, index) => (
-                <>
-                    <TableBodyRow 
-                        number={index + 1} 
-                        elements={[
-                            { value: "", isEditable: false, type: "number"},
-                            { value: job.seller, isEditable: false, type: "number"},
-                            { value: `JOB ${index + 1}: ${job.title}`, isEditable: false, type: "text"},
-                            { value: "", isEditable: false, type: "number"},
-                            { value: "", isEditable: false, type: "number"},
-                            { value: "", isEditable: true, type: "number"},
-                            { value: "", isEditable: true, type: "number"},
-                            { value: "", isEditable: true, type: "number"},
-                            { value: "", isEditable: false, type: "date"},
-                            { value: "", isEditable: false, type: "date"}
-                        ]}
-                    />
-                    {job.rows.map((row, index) => (
-                        <TableBodyRow
-                            number={index + 1}
-                            elements={[
-                                { value: row.type, isEditable: false, type: "number"},
-                                { value: row.seller, isEditable: false, type: "number"},
-                                { value: row.text, isEditable: false, type: "text"},
-                                { value: `${row.instructionTime}`, isEditable: false, type: "number"},
-                                { value: `${row.clockedTime}`, isEditable: false, type: "number"},
-                                { value: `${row.amount}`, isEditable: true, type: "number"},
-                                { value: `${row.unitPrice}`, isEditable: true, type: "number"},
-                                { value: `${row.discount}`, isEditable: true, type: "number"},
-                                { value: `${row.totalPrice}`, isEditable: true, type: "number"},
-                                { value: `${row.collectDate}`, isEditable: false, type: "date"}
-                            ]}
+        <>
+            <Table>
+                <TableHeaderRow>
+                    {ALL_TABLE_HEADERS.map((header, index) => (
+                        <TableHeaderItem 
+                            key={index}
+                            element={header} 
                         />
                     ))}
-                </>
-            ))}
-        </Table>
+                </TableHeaderRow>
+                {workOrder?.rows.map((row, index) => (
+                    <TableBodyRow
+                        key={index}
+                        number={index + 1}
+                    >
+                        <TableBodyLabelItem value={row.type}/>
+                        <TableBodySelectItem values={ALL_SELLERS} selectedValue="P1"/>
+                        <TableBodyLabelItem value={row.text}/>
+                        <TableBodyLabelItem value={row.instructionTime.toString()}/>
+                        <TableBodyLabelItem value={row.clockedTime.toString()}/>
+                        <TableBodyInputItem value={row.amount} type="number"/>
+                        <TableBodyInputItem value={row.unitPrice} type="number"/>
+                        <TableBodyInputItem value={row.discount} type="number"/>
+                        <TableBodyInputItem value={row.totalPrice} type="number"/>
+                        <TableBodyLabelItem value={row.collectDate.toString()}/>
+                    </TableBodyRow>
+                ))}
+            </Table>
+            <p>Total Price</p>
+        </>
     )
 }

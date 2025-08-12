@@ -13,6 +13,11 @@ export class WorkOrder {
     }
 
     get jobs(): Job[] { return this._jobs; }
+    get rows(): Row[] {
+        let rows: Row[] = [];
+        this._jobs.forEach(job => rows = [ ...rows, ...job.rows]);
+        return rows;
+    }
 
     add(job: Job): void {
         this._jobs = [...this._jobs, job];
@@ -24,8 +29,6 @@ export class WorkOrder {
  */
 export class Job {
 
-    private _title: string;
-    private _seller: string;
     private _rows: Row[];
 
     /**
@@ -34,13 +37,9 @@ export class Job {
      * @param seller 
      */
     constructor(title: string, seller: string) {
-        this._title = title;
-        this._seller = seller;
-        this._rows = [];
+        this._rows = [ new Row("job", seller, `JOB 1: ${title}`, 0, 0, 0, 0) ];
     }
 
-    get title(): string { return this._title; }
-    get seller(): string { return this._seller; }
     get rows(): Row[] { return this._rows; }
 
     /**
@@ -104,4 +103,4 @@ export class Row {
     get collectDate(): Date { return this._collectDate; }
 }
 
-export type Type = 'text' | 'labour' | "part"
+export type Type = 'text' | 'labour' | "part" | "job"
