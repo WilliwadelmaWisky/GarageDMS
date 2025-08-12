@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
 
 <p align="justify">
-    ...
+    A simple cross platform dealer management system for storing car service history and keeping track of current inventory. The application is built with electron.
 </p>
 
 <p align="right">(<a href="#garagedms">back to top</a>)</p>
