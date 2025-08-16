@@ -1,4 +1,4 @@
-import { Inventory } from "./inventory.js";
+import { Inventory } from "../features/inventory/types/inventory.js";
 import { Vehicle } from "./vehicle.js";
 
 /**
