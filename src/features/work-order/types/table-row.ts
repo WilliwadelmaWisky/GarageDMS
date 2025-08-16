@@ -1,9 +1,13 @@
-import { Date } from '@datatypes/date';
+import type { Date } from '@datatypes/date';
 import type { TimeSpan } from '@datatypes/timespan';
 
+/**
+ * 
+ */
 export type TableRow = {
-    Type: Type,
+    Type: string,
     Seller: string,
+    Mechanic: string,
     Text: string,
     InstructionTime: TimeSpan,
     ClockedTime: TimeSpan,
@@ -11,7 +15,7 @@ export type TableRow = {
     UnitPrice: number,
     Discount: number,
     TotalPrice: number,
-    CollectDate: Date
+    CollectDate: Date,
+    AmountInStock: number,
+    AmountAvailable: number
 }
-
-type Type = "job" | "text" | "part"

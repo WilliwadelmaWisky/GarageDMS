@@ -1,15 +1,14 @@
-import MenuBar from '../components/MenuBar';
-import { WorkOrderView } from './routes/WorkOrderView';
+import WorkOrderPage from './routes/work-order-page';
 
 /**
  * 
  * @returns 
  */
 function App() {
+
   return (
     <>
-      <MenuBar/>
-      <WorkOrderView/>
+      <WorkOrderPage/>
     </>
   )
 }
