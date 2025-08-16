@@ -29,7 +29,7 @@
       "@components/*": ["./src/components/*"],
       "@features/*": ["./src/features/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@types/*": ["./src/types/*"],
+      "@datatypes/*": ["./src/types/*"],
     }
   },
   "include": ["src"]
