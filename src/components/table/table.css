@@ -3,12 +3,18 @@ table {
     overflow-x: auto;
     white-space: nowrap;
 }
+table > tbody > tr:nth-child(odd) {
+  background-color: rgb(240, 240, 240);
+}
 th {
     padding: 10px 10px;
-    background-color: lightgray;
+    background-color: rgb(180, 180, 180);
     border: 1px solid black;
 }
 td {
     padding: 5px 10px;
     border: 1px solid black;
+}
+td > input[type="number"] {
+    width: 6em;
 }

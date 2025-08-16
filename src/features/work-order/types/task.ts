@@ -4,20 +4,13 @@ import type { TimeSpan } from "@datatypes/timespan";
 /**
  * 
  */
-export type WorkOrder = {
-    ID: number,
-    Type: Type,
-    Jobs: Job[]
-};
-
-type Type = "offer" | "order";
-
-type Job = {
+export type Task = {
     Title: string,
     SellerID: string,
     IsInvoiced: boolean,
     Contents: Content[]
 }
+
 
 export type Content = TextRow | WorkRow | PartRow;
 
@@ -31,11 +24,11 @@ export type WorkRow = {
     Type: "work",
     SellerID: string,
     MechanicID: string,
+    Description: string,
     InstructionTime: TimeSpan,
     ClockedTime: TimeSpan,
     Discount: number,
     UnitPrice: number,
-    TotalPrice: number
 };
 
 export type PartRow = {
@@ -45,6 +38,5 @@ export type PartRow = {
     Amount: number,
     Discount: number,
     UnitPrice: number,
-    TotalPrice: number,
     CollectDate: Date
 };

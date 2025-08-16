@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import "./table-row.css";
 
 /**
  * 
@@ -23,7 +22,7 @@ interface TableHeaderRowProps {
  * 
  * @returns 
  */
-export function TableBodyRow({ number, children }: TableBodyRowProps) {
+export function TableBodyRow({ children }: TableBodyRowProps) {
 
     return (
         <tr
@@ -32,7 +31,7 @@ export function TableBodyRow({ number, children }: TableBodyRowProps) {
                     return;
                 }
 
-                console.log("Clicked a row: " + number);
+                console.log("Double-Clicked a row");
             }}
         >
             <th></th>
@@ -42,6 +41,5 @@ export function TableBodyRow({ number, children }: TableBodyRowProps) {
 }
 
 interface TableBodyRowProps {
-    number: number,
     children: ReactNode[] | ReactNode
 }
