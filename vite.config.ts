@@ -8,4 +8,12 @@ export default defineConfig({
   build: {
     outDir: "dist-react",
   },
+  resolve: {
+    alias: [
+      { find: "@components", replacement: "/src/components" },
+      { find: "@features", replacement: "/src/features" },
+      { find: "@hooks", replacement: "/src/hooks" },
+      { find: "@types", replacement: "/src/types" },
+    ],
+  },
 })
