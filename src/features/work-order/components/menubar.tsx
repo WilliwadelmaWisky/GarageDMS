@@ -10,10 +10,11 @@ export default function MenuBar() {
         <Nav as="ul">
             <Nav.Item as="li">
                 <NavDropdown title="File">
-                    <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
+                    <NavDropdown.Item href="#action3">New</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action5">Something else here</NavDropdown.Item>
+                    <NavDropdown.Item href="#action5">Open</NavDropdown.Item>
+                    <NavDropdown.Divider/>
+                    <NavDropdown.Item>Quit</NavDropdown.Item>
                 </NavDropdown>
             </Nav.Item>
             <Nav.Item as="li">

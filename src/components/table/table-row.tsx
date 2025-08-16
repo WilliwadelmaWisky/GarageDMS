@@ -23,7 +23,7 @@ interface TableHeaderRowProps {
  * 
  * @returns 
  */
-export function TableBodyRow({ number, children: chidlren }: TableBodyRowProps) {
+export function TableBodyRow({ number, children }: TableBodyRowProps) {
 
     return (
         <tr
@@ -36,7 +36,7 @@ export function TableBodyRow({ number, children: chidlren }: TableBodyRowProps) 
             }}
         >
             <th></th>
-            {chidlren}
+            {children}
         </tr>
     );
 }

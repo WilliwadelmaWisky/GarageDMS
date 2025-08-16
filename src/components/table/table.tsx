@@ -3,7 +3,13 @@ import './table.css';
 
 /**
  * 
- * @returns 
+ */
+interface Props {
+    children: ReactNode | ReactNode[];
+}
+
+/**
+ * @param props ...
  */
 export function Table({ children }: Props) {
 
@@ -19,8 +25,4 @@ export function Table({ children }: Props) {
             </table>
         </>
     )
-}
-
-export interface Props {
-    children: ReactNode | ReactNode[];
 }

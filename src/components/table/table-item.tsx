@@ -54,29 +54,37 @@ interface TableBodyLabelItemProps {
     value: string
 }
 
-export function TableBodyInputItem({ value, type }: TableBodyInputItemProps) {
+export function TableBodyInputItem({ type, value, onChange }: TableBodyInputItemProps) {
     return (
         <td>
-            <input type={type} value={value}/>
+            <input 
+                type={type} 
+                value={value}
+                onChange={onChange}
+            />
         </td>
     );
 }
 
 interface TableBodyInputItemProps {
+    type: React.HTMLInputTypeAttribute,
     value: string | number | Readonly<string[]>,
-    type: React.HTMLInputTypeAttribute
+    onChange: React.ChangeEventHandler<HTMLInputElement>
 }
 
-export function TableBodySelectItem({ values, selectedValue }: TableBodySelectItemProps) {
+export function TableBodySelectItem({ allOptions, value, onChange }: TableBodySelectItemProps) {
     return (
         <td>
-            <select value={selectedValue}>
-                {values.map((value, index) => (
+            <select 
+                value={value}
+                onChange={onChange}
+            >
+                {allOptions.map((option, index) => (
                     <option 
                         key={index}
-                        value={value}
+                        value={option}
                     >
-                        {value.toUpperCase()}
+                        {option.toUpperCase()}
                     </option>
                 ))}
             </select>
@@ -85,6 +93,7 @@ export function TableBodySelectItem({ values, selectedValue }: TableBodySelectIt
 }
 
 interface TableBodySelectItemProps {
-    values: readonly string[],
-    selectedValue: string
+    allOptions: Readonly<string[]>,
+    value: string,
+    onChange: React.ChangeEventHandler<HTMLSelectElement>
 }
