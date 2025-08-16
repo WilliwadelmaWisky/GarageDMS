@@ -14,6 +14,7 @@ export default defineConfig({
       { find: "@features", replacement: "/src/features" },
       { find: "@hooks", replacement: "/src/hooks" },
       { find: "@datatypes", replacement: "/src/types" },
+      { find: "@utils", replacement: "/src/utils" }
     ],
   },
 })
