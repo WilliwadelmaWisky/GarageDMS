@@ -12,7 +12,7 @@ interface Props {
  * @param props 
  * @returns 
  */
-export default function Input({ type, value, onChange }: Props) {
+export default function TableInputCellElement({ type, value, onChange }: Props) {
     return (
         <td>
             <input 

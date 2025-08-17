@@ -1,13 +1,21 @@
+/**
+ * 
+ */
+interface Props {
+    title: string,
+    className?: string | undefined 
+}
 
 /**
  * 
- * @param param0 
+ * @param props 
  * @returns 
  */
-export function TableHeaderItem({ element }: TableHeaderItemProps) {
+export default function TableHeaderCellElement({ title, className }: Props) {
 
     return (
         <th 
+            className={className}
             onMouseMove={e => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const offsetX = e.clientX - rect.left;
@@ -27,16 +35,7 @@ export function TableHeaderItem({ element }: TableHeaderItemProps) {
                 }
             }}
         >
-            {element.toUpperCase()}
+            {title.toUpperCase()}
         </th>
     );
-}
-
-interface TableHeaderItemProps {
-    element: string,
-
-}
-
-export function TableBodyEmptyItem() {
-    return <td></td>;
 }

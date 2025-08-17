@@ -1,6 +1,7 @@
 table {
     display: block;
     overflow-x: auto;
+    overflow-y: auto;
     white-space: nowrap;
 }
 table > tbody > tr:nth-child(odd) {
@@ -12,9 +13,38 @@ th {
     border: 1px solid black;
 }
 td {
-    padding: 5px 10px;
     border: 1px solid black;
 }
+td > p {
+    padding: 5px 10px;
+    margin: 0;
+    border: 0;
+}
 td > input[type="number"] {
-    width: 6em;
+    padding: 5px 10px;
+    min-width: 3em;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+}
+td > select {
+    padding: 5px 10px;
+    min-width: 3em;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+}
+
+.highlight {
+    font-weight: bold;
+    color: blue;
+}
+.wide {
+    min-width: 15em;
+    width: 30em;
+}
+.selected {
+    background-color: blue;
 }

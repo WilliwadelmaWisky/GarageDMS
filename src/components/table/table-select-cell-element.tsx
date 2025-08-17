@@ -12,7 +12,7 @@ interface Props {
  * @param props 
  * @returns 
  */
-export default function Select({ allOptions, value, onChange }: Props) {
+export default function TableSelectCellElement({ allOptions, value, onChange }: Props) {
     return (
         <td>
             <select 
