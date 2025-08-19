@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import TaskTable from "./task-table";
-import type { Task } from "../types/task";
+import type { Content, Task } from "../types/task";
 import MenuBar from "./menubar";
 import ToolBar from "./toolbar";
 import { NULL as Date_NULL} from "@datatypes/date";
@@ -8,7 +8,11 @@ import { of } from "@utils/timespan-util";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { normalizeIndex } from "@utils/array-util";
 
+/**
+ * 
+ */
 interface State {
     ID: number,
     Type: "offer" | "contract",
@@ -40,9 +44,16 @@ const INITIAL_STATE: State = {
     ]
 };
 
+/**
+ * 
+ */
 interface Action {
-    type: "ADD_TASK" | "DELETE_TASK" | "ADD_CONTENT" | "DELETE_CONTENT" | "SET_SELLER",
-    taskIndex?: number
+    type: "ADD_TASK" | "DELETE_TASK" | "MOVE_UP_TASK" | "MOVE_DOWN_TASK"
+        | "ADD_CONTENT" | "DELETE_CONTENT" | "MOVE_UP_CONTENT" | "MOVE_DOWN_CONTENT"
+        | "SET" | "SET_SELLER",
+    taskIndex?: number,
+    contentIndex?: number,
+    payload?: Task | Content
 }
 
 /**
@@ -52,25 +63,28 @@ interface Action {
  * @returns 
  */
 function reducer(state: State, action: Action): State {
+
     console.log("dispatch called");
 
-    function getIndex<T>(index: number, arr: Array<T>): number { return index < 0 ? arr.length + index : index; }
-
-    const taskIndex: number = action.taskIndex 
-        ? action.taskIndex 
-        : getIndex(-1, state.Tasks);
+    // Normalize taskIndex to be between 0 and array.len - 1
+    const taskIndex: number = normalizeIndex(action.taskIndex !== undefined ? action.taskIndex : -1, state.Tasks);
+    const contentIndex: number = normalizeIndex(action.contentIndex !== undefined ? action.contentIndex : -1, state.Tasks[taskIndex].Contents);
 
     switch (action.type) {
         case "ADD_TASK":
             return {
                 ...state,
                 Tasks: [
-                    ...state.Tasks.slice(0, taskIndex),
+                    ...state.Tasks.slice(0, taskIndex + 1),
                     { Title: "New Task", SellerID: "P2", IsInvoiced: false, Contents: [] },
-                    ...state.Tasks.slice(taskIndex)
+                    ...state.Tasks.slice(taskIndex + 1)
                 ]
             }
         case "DELETE_TASK":
+            if (state.Tasks.length <= 1) {
+                return state;
+            }
+
             return {
                 ...state,
                 Tasks: [ 
@@ -78,6 +92,36 @@ function reducer(state: State, action: Action): State {
                     ...state.Tasks.slice(taskIndex + 1)
                 ]
             }
+        case "MOVE_UP_TASK":
+            if (taskIndex === 0) {
+                return state;
+            }
+
+            return {
+                ...state,
+                Tasks: [
+                    ...state.Tasks.slice(0, taskIndex - 1),
+                    state.Tasks[taskIndex],
+                    state.Tasks[taskIndex - 1],
+                    ...state.Tasks.slice(taskIndex + 1)
+                ]
+            }
+        case "MOVE_DOWN_TASK":
+            if (taskIndex === state.Tasks.length - 1) {
+                return state;
+            }
+
+            return {
+                ...state,
+                Tasks: [
+                    ...state.Tasks.slice(0, taskIndex),
+                    state.Tasks[taskIndex + 1],
+                    state.Tasks[taskIndex],
+                    ...state.Tasks.slice(taskIndex + 2)
+                ]
+            }
+        case "SET_SELLER":
+            break;
         case "ADD_CONTENT":
             return {
                 ...state,
@@ -86,16 +130,16 @@ function reducer(state: State, action: Action): State {
                     {
                         ...state.Tasks[taskIndex],
                         Contents: [
-                            ...state.Tasks[taskIndex].Contents,
-                            { Type: "text", SellerID: "P2", Text: "New Content" }
+                            ...state.Tasks[taskIndex].Contents.slice(0, contentIndex + 1),
+                            { Type: "text", SellerID: "P2", Text: "New Content" },
+                            ...state.Tasks[taskIndex].Contents.slice(contentIndex + 1),
                         ]
                     },
                     ...state.Tasks.slice(taskIndex + 1),
                 ]
             }
-        case "SET_SELLER":
-            break;
     }
+    
     return state;
 }
 
@@ -114,6 +158,8 @@ interface Props {
 export default function View({}: Props) {
 
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+    
+    console.log("render view");
 
     return (
         <>
@@ -125,11 +171,15 @@ export default function View({}: Props) {
             </InputGroup>
             <TaskTable 
                 tasks={state.Tasks}
+                onChange={e => console.log(`changed: ${e.target} to ${e.value}, taskIndex: ${e.taskIndex}, contentIndex: ${e.contentIndex}`)}
             />
 
             <Button variant="primary" onClick={e => dispatch({ type: "ADD_TASK", taskIndex: 0 })}>Add Task</Button>
             <Button variant="primary" onClick={e => dispatch({ type: "DELETE_TASK", taskIndex: 0 })}>Delete Task</Button>
-            <Button variant="primary" onClick={e => dispatch({ type: "ADD_CONTENT" })}>Add Content</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "MOVE_UP_TASK", taskIndex: 2 })}>Moveup Task</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "MOVE_DOWN_TASK", taskIndex: 2 })}>Movedown Task</Button>
+
+            <Button variant="primary" onClick={e => dispatch({ type: "ADD_CONTENT", taskIndex: 0 })}>Add Content</Button>
         </>
     );
 }
