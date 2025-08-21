@@ -5,6 +5,7 @@ import type { TimeSpan } from "@datatypes/timespan";
  * 
  */
 export type Task = {
+    TaskID: string,
     Title: string,
     SellerID: string,
     IsInvoiced: boolean,
@@ -15,12 +16,14 @@ export type Task = {
 export type Content = TextRow | WorkRow | PartRow;
 
 export type TextRow = {
+    ID: string,
     Type: "text",
     SellerID: string,
     Text: string,
 };
 
 export type WorkRow = {
+    ID: string,
     Type: "work",
     SellerID: string,
     MechanicID: string,
@@ -32,6 +35,7 @@ export type WorkRow = {
 };
 
 export type PartRow = {
+    ID: string,
     Type: "part",
     SellerID: string,
     PartID: string,

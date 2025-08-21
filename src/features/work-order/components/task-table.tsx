@@ -7,7 +7,7 @@ import type { Task } from '../types/task';
 import TableHeaderRowElement from '@components/table/table-header-row-element';
 import TableHeaderCellElement from '@components/table/table-header-cell-element';
 import TaskTableRow from './task-table-row';
-import PartModal from './part-modal';
+import React, { useState } from 'react';
 
 
 const ALL_TABLE_HEADERS = ["type", "seller", "mechanic", "title", "i. time", "c, time", "amount", "unit price", "discount %", "total price", "collected", "amount in stock", "amount available"];
@@ -26,19 +26,28 @@ interface ChangeEvent {
  */
 interface Props {
     tasks: Task[],
-    onChange: (e: ChangeEvent) => void
+    onChange: (e: ChangeEvent) => void,
+    onSelect: (id: string) => void
+}
+
+interface State {
+    selected: string[]
 }
 
 /**
  * 
  * @param props ...
  */
-export default function TaskTable({ tasks, onChange }: Props) {
+export default function TaskTable({ tasks, onChange, onSelect }: Props) {
+
+    const [state, setState] = useState<State>({ selected: []});
+
+    console.log("render table");
     
     return (
         <>
             <TableElement>
-                <TableHeaderRowElement>
+                <TableHeaderRowElement key='header'>
                     {ALL_TABLE_HEADERS.map((header, index) => (
                         <TableHeaderCellElement 
                             key={index}
@@ -48,11 +57,16 @@ export default function TaskTable({ tasks, onChange }: Props) {
                     ))}
                 </TableHeaderRowElement>
                 {tasks.map((task, taskIndex) => (
-                    <>
+                    <React.Fragment key={taskIndex}>
                         <TableBodyRowElement 
-                            key={taskIndex}
+                            key={task.TaskID}
+                            isSelected={state.selected.findIndex(id => task.TaskID === id) !== -1}
+                            onSelect={() => {
+                                onSelect(task.TaskID);
+                                setState({ ...state, selected: [task.TaskID] });
+                            }}
                             onEdit={() => {
-
+                                console.log("edit task " + taskIndex);
                             }}
                         >
                             <TableLabelCellElement value="task"/>
@@ -71,18 +85,22 @@ export default function TaskTable({ tasks, onChange }: Props) {
                         </TableBodyRowElement>
                         {task.Contents.map((content, contentIndex) => (
                             <TaskTableRow 
-                                key={contentIndex} 
+                                key={content.ID} 
                                 content={content}
                                 allSellerIDs={ALL_SELLERS}
                                 allMechanicIDs={ALL_SELLERS}
+                                isSelected={state.selected.findIndex(id => content.ID === id) !== -1}
+                                onSelect={() => {
+                                    onSelect(content.ID);
+                                    setState({ ...state, selected: [content.ID] });
+                                }}
                                 onChange={e => onChange({ target: e.target, value: e.value, taskIndex: taskIndex, contentIndex: contentIndex })}
                             />
                         ))}
-                    </>
+                    </React.Fragment>
                 ))}
             </TableElement>
             <p>Total Price</p>
-            <PartModal/>
         </>
     )
 }

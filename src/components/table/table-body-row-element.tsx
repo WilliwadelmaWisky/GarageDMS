@@ -1,10 +1,10 @@
-import { useState } from "react";
-
 /**
  * 
  */
 interface Props {
     children: React.ReactNode[] | React.ReactNode,
+    isSelected: boolean,
+    onSelect: () => void,
     onEdit?: () => void
 }
 
@@ -13,22 +13,22 @@ interface Props {
  * @param props
  * @returns 
  */
-export default function TableBodyRowElement({ children, onEdit }: Props) {
-
-    const [isSelected, setIsSelected] = useState<boolean>(false);
+export default function TableBodyRowElement({ children, isSelected, onSelect, onEdit }: Props) {
 
     return (
-        <tr>
+        <tr
+            onDoubleClick={e => {
+                if (onEdit !== undefined)
+                    onEdit();
+            }}
+            onClick={e => {
+                if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) { return; }
+                onSelect();
+            }} 
+            className={isSelected ? "selected" : ""}
+        >
             <th 
-                style={{width: "4em", textAlign: "center"}}
-                onDoubleClick={e => {
-                    if (onEdit !== undefined)
-                        onEdit();
-                }}
-                onClick={e => {
-                    console.log("select a row");
-                    setIsSelected(true);
-                }}
+                style={{ minWidth: "4em", width: "4em", textAlign: "center"}}
             ></th>
             {children}
         </tr>

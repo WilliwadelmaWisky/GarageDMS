@@ -23,6 +23,8 @@ interface Props {
     content: Content,
     allSellerIDs: string[],
     allMechanicIDs: string[],
+    isSelected: boolean,
+    onSelect: () => void,
     onChange: (e: ChangeEvent) => void
 }
 
@@ -31,10 +33,14 @@ interface Props {
  * @param props 
  * @returns 
  */
-export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, onChange }: Props) {
+export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, isSelected, onSelect, onChange }: Props) {
     switch (content.Type) {
         case 'text': return (
-            <TableBodyRowElement onEdit={() => {}}>
+            <TableBodyRowElement 
+                isSelected={isSelected}
+                onSelect={onSelect} 
+                onEdit={() => {}}
+            >
                 <TableLabelCellElement value={content.Type}/>
                 <TableSelectCellElement allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
                 <td/>
@@ -51,7 +57,11 @@ export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, on
             </TableBodyRowElement>
         );
         case 'work': return (
-             <TableBodyRowElement onEdit={() => {}}>
+            <TableBodyRowElement 
+                isSelected={isSelected}
+                onSelect={onSelect}
+                onEdit={() => {}}
+            >
                 <TableLabelCellElement value={content.Type}/>
                 <TableSelectCellElement allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
                 <TableSelectCellElement allOptions={allMechanicIDs} value={content.MechanicID} onChange={e => {}}/>
@@ -68,7 +78,11 @@ export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, on
             </TableBodyRowElement>
         );
         case 'part': return (
-             <TableBodyRowElement onEdit={() => {}}>
+            <TableBodyRowElement 
+                isSelected={isSelected}
+                onSelect={onSelect}
+                onEdit={() => {}}
+             >
                 <TableLabelCellElement value={content.Type}/>
                 <TableSelectCellElement allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
                 <td/>
