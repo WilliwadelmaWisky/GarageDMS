@@ -1,7 +1,4 @@
-import TableBodyRowElement from '@components/table/table-body-row-element';
-import TableLabelCellElement from "@components/table/table-label-cell-element";
-import TableSelectCellElement from "@components/table/table-select-cell-element";
-import TableInputCellElement from "@components/table/table-input-cell-element";
+import Table from "@components/table/table"
 
 import type { Content } from "../types/task";
 
@@ -23,8 +20,6 @@ interface Props {
     content: Content,
     allSellerIDs: string[],
     allMechanicIDs: string[],
-    isSelected: boolean,
-    onSelect: () => void,
     onChange: (e: ChangeEvent) => void
 }
 
@@ -33,20 +28,17 @@ interface Props {
  * @param props 
  * @returns 
  */
-export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, isSelected, onSelect, onChange }: Props) {
+export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, onChange }: Props) {
     switch (content.Type) {
         case 'text': return (
-            <TableBodyRowElement 
-                isSelected={isSelected}
-                onSelect={onSelect} 
+            <Table.Row 
+                id={content.ID}
                 onEdit={() => {}}
             >
-                <TableLabelCellElement value={content.Type}/>
-                <TableSelectCellElement allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
+                <Table.Label value={content.Type}/>
+                <Table.Select allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
                 <td/>
-                <TableLabelCellElement value={content.Text}/>
-                <td/>
-                <td/>
+                <Table.Label value={content.Text}/>
                 <td/>
                 <td/>
                 <td/>
@@ -54,49 +46,49 @@ export default function TaskTableRow({ content, allSellerIDs, allMechanicIDs, is
                 <td/>
                 <td/>
                 <td/>
-            </TableBodyRowElement>
+                <td/>
+                <td/>
+            </Table.Row>
         );
         case 'work': return (
-            <TableBodyRowElement 
-                isSelected={isSelected}
-                onSelect={onSelect}
+            <Table.Row 
+                id={content.ID}
                 onEdit={() => {}}
             >
-                <TableLabelCellElement value={content.Type}/>
-                <TableSelectCellElement allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
-                <TableSelectCellElement allOptions={allMechanicIDs} value={content.MechanicID} onChange={e => {}}/>
-                <TableLabelCellElement value={content.Description}/>
-                <TableInputCellElement type='number' value={TimeSpan_toString(content.InstructionTime)} onChange={e => onChange({ target: "INSTRUCTION_TIME", value: e.target.value })}/>
-                <TableLabelCellElement value={TimeSpan_toString(content.ClockedTime)}/>
+                <Table.Label value={content.Type}/>
+                <Table.Select allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
+                <Table.Select allOptions={allMechanicIDs} value={content.MechanicID} onChange={e => {}}/>
+                <Table.Label value={content.Description}/>
+                <Table.Input type='number' value={TimeSpan_toString(content.InstructionTime)} onChange={e => onChange({ target: "INSTRUCTION_TIME", value: e.target.value })}/>
+                <Table.Label value={TimeSpan_toString(content.ClockedTime)}/>
                 <td/>
-                <TableInputCellElement type='number' value={content.UnitPrice} onChange={e => onChange({ target: "UNIT_PRICE", value: e.target.value })}/>
-                <TableInputCellElement type='number' value={content.Discount * 100} onChange={e => onChange({ target: "DISCOUNT", value: e.target.value })}/>
-                <TableInputCellElement type='number' value={content.UnitPrice * (1 - content.Discount)} onChange={e => onChange({ target: "TOTAL_PRICE", value: e.target.value })}/>
+                <Table.Input type='number' value={content.UnitPrice} onChange={e => onChange({ target: "UNIT_PRICE", value: e.target.value })}/>
+                <Table.Input type='number' value={content.Discount * 100} onChange={e => onChange({ target: "DISCOUNT", value: e.target.value })}/>
+                <Table.Input type='number' value={content.UnitPrice * (1 - content.Discount)} onChange={e => onChange({ target: "TOTAL_PRICE", value: e.target.value })}/>
                 <td/>
                 <td/>
                 <td/>
-            </TableBodyRowElement>
+            </Table.Row>
         );
         case 'part': return (
-            <TableBodyRowElement 
-                isSelected={isSelected}
-                onSelect={onSelect}
+            <Table.Row 
+                id={content.ID}
                 onEdit={() => {}}
              >
-                <TableLabelCellElement value={content.Type}/>
-                <TableSelectCellElement allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
+                <Table.Label value={content.Type}/>
+                <Table.Select allOptions={allSellerIDs} value={content.SellerID} onChange={e => onChange({ target: "SELLER", value: e.target.value })}/>
                 <td/>
-                <TableLabelCellElement value={content.PartID}/>
+                <Table.Label value={content.PartID}/>
                 <td/>
                 <td/>
-                <TableInputCellElement type='number' value={content.Amount} onChange={e => onChange({ target: "AMOUNT", value: e.target.value })}/>
-                <TableInputCellElement type='number' value={content.UnitPrice} onChange={e => onChange({ target: "UNIT_PRICE", value: e.target.value })}/>
-                <TableInputCellElement type='number' value={content.Discount * 100} onChange={e => onChange({ target: "DISCOUNT", value: e.target.value })}/>
-                <TableInputCellElement type='number' value={content.UnitPrice * (1 - content.Discount)} onChange={e => onChange({ target: "TOTAL_PRICE", value: e.target.value })}/>
-                <TableLabelCellElement value={Date_toString(content.CollectDate)}/>
-                <TableLabelCellElement value='0'/>
-                <TableLabelCellElement value='0'/>
-            </TableBodyRowElement>
+                <Table.Input type='number' value={content.Amount} onChange={e => onChange({ target: "AMOUNT", value: e.target.value })}/>
+                <Table.Input type='number' value={content.UnitPrice} onChange={e => onChange({ target: "UNIT_PRICE", value: e.target.value })}/>
+                <Table.Input type='number' value={content.Discount * 100} onChange={e => onChange({ target: "DISCOUNT", value: e.target.value })}/>
+                <Table.Input type='number' value={content.UnitPrice * (1 - content.Discount)} onChange={e => onChange({ target: "TOTAL_PRICE", value: e.target.value })}/>
+                <Table.Label value={Date_toString(content.CollectDate)}/>
+                <Table.Label value='0'/>
+                <Table.Label value='0'/>
+            </Table.Row>
         );
     }
 }

@@ -12,6 +12,7 @@ import { normalizeIndex } from "@utils/array-util";
 import PartModal from "./part-modal";
 
 import { v4 as uuidv4 } from "uuid";
+import type { TableRef } from "@components/table/table";
 
 /**
  * 
@@ -179,7 +180,7 @@ interface Props {
 export default function View({}: Props) {
 
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-    const ref = useRef<string>(state.Tasks[0].TaskID);
+    const ref = useRef<TableRef>({ getSelected: () => "" });
     
     console.log("render view: " + ref.current);
 
@@ -193,19 +194,20 @@ export default function View({}: Props) {
                 <Button variant="outline-secondary">Search</Button>
             </InputGroup>
             <TaskTable 
+                ref={ref}
                 tasks={state.Tasks}
                 onChange={e => console.log(`changed: ${e.target} to ${e.value}, taskIndex: ${e.taskIndex}, contentIndex: ${e.contentIndex}`)}
-                onSelect={id => ref.current = id}
+                //onSelect={id => ref.current = id}
             />
 
             <PartModal/>
 
-            <Button variant="primary" onClick={e => dispatch({ type: "ADD_TASK", id: ref.current })}>Add Task</Button>
-            <Button variant="primary" onClick={e => dispatch({ type: "DELETE_TASK", id: ref.current })}>Delete Task</Button>
-            <Button variant="primary" onClick={e => dispatch({ type: "MOVE_UP_TASK", id: ref.current })}>Moveup Task</Button>
-            <Button variant="primary" onClick={e => dispatch({ type: "MOVE_DOWN_TASK", id: ref.current })}>Movedown Task</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "ADD_TASK", id: ref.current.getSelected() })}>Add Task</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "DELETE_TASK", id: ref.current.getSelected() })}>Delete Task</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "MOVE_UP_TASK", id: ref.current.getSelected() })}>Moveup Task</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "MOVE_DOWN_TASK", id: ref.current.getSelected() })}>Movedown Task</Button>
 
-            <Button variant="primary" onClick={e => dispatch({ type: "ADD_CONTENT", id: ref.current })}>Add Content</Button>
+            <Button variant="primary" onClick={e => dispatch({ type: "ADD_CONTENT", id: ref.current.getSelected() })}>Add Content</Button>
         </>
     );
 }
