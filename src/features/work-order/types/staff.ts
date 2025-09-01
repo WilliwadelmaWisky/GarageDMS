@@ -1,15 +1,7 @@
 /**
  * 
  */
-export type Seller = {
-    SellerID: string,
-    Name: string
-};
-
-/**
- * 
- */
-export type Mechanic = {
-    MechanicID: string,
+export type Staff = {
+    StaffID: string,
     Name: string
 };
