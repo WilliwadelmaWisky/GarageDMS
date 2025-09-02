@@ -5,8 +5,8 @@ import './table.css';
  * 
  */
 interface TableContext {
-    active: string,
-    setActive: (s: string) => void;
+    selection: string[];
+    setSelection: (selection: string[]) => void;
 }
 
 /**
@@ -33,7 +33,22 @@ const useTableContext = () => {
  * 
  */
 export interface TableRef {
-    getSelected: () => string;
+    getSelection: () => string[];
+    setSelection: (selection: string[]) => void;
+}
+
+/**
+ * 
+ */
+interface State {
+    selection: string[];
+}
+
+/**
+ * 
+ */
+const INITIAL_STATE: State = {
+    selection: [],
 }
 
 
@@ -49,18 +64,22 @@ interface TableProps {
 /**
  * @param props ...
  */
-export default function Table({ headers, ref, children }: TableProps) {
+function Table({ headers, ref, children }: TableProps) {
 
-    const [active, setActive] = useState<string>("");
+    const [state, setState] = useState<State>(INITIAL_STATE);
 
     useImperativeHandle(ref, () => ({
-        getSelected: () => {
-            return active;
-        }
+        getSelection: () =>  state.selection,
+        setSelection: (selection) => setState({ ...state, selection: selection })
     }));
 
     return (
-        <TableContext.Provider value={{ active, setActive }}>
+        <TableContext.Provider 
+            value={{ 
+                selection: state.selection, 
+                setSelection: (selection) => setState({ ...state, selection: selection })
+            }}
+        >
             <table>
                 <thead>
                     <tr>
@@ -106,7 +125,8 @@ export default function Table({ headers, ref, children }: TableProps) {
  */
 interface RowProps {
     id: string;
-    onEdit?: () => void;
+    connectedIDs: string[];
+    onDoubleClick?: (e: React.MouseEvent) => void;
     className?: string;
     children: React.ReactNode[] | React.ReactNode;
 }
@@ -116,21 +136,24 @@ interface RowProps {
  * @param props
  * @returns 
  */
-function Row({ id, onEdit, className, children }: RowProps) {
+function Row({ id, connectedIDs, onDoubleClick, className, children }: RowProps) {
 
-    const { active, setActive } = useTableContext();
+    const { selection, setSelection } = useTableContext();
 
-    const isActive = active === id;
+    const isActive = selection.findIndex(selectedID => selectedID === id) !== -1;
 
     return (
         <tr
             onDoubleClick={e => {
-                if (onEdit !== undefined)
-                    onEdit();
+                if (onDoubleClick === undefined || e.button !== 0) { return; }
+                onDoubleClick(e);
             }}
             onClick={e => {
                 if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) { return; }
-                setActive(id);
+
+                if (e.ctrlKey) { console.log("control was hold down, not impl"); }
+                else if (e.shiftKey) { console.log("shift was hold down, not impl"); }
+                else { setSelection([ ...connectedIDs, id ]); }
             }} 
             className={isActive ? "selected" : ""}
         >
@@ -238,3 +261,4 @@ Table.Row = Row;
 Table.Label = Label;
 Table.Input = Input;
 Table.Select = Select;
+export default Table;

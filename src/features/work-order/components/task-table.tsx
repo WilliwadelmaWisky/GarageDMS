@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table, { type TableRef } from '@components/table/table'
 import { toString as TimeSpan_toString } from '@utils/timespan-util';
 import { toString as Date_toString } from '@utils/date-util';
 import type { Row } from '../types/table-row';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { nextIndex } from '@utils/array-util';
 
 
-const ALL_TABLE_HEADERS = ["type", "seller", "mechanic", "title", "i. time", "c, time", "amount", "unit price", "discount %", "total price", "collected", "amount in stock", "amount available"];
+const ALL_TABLE_HEADERS = ["type", "staff", "title", "i. time", "c, time", "amount", "unit price", "discount %", "total price", "collect date", "amount in stock", "amount available"];
 const ALL_SELLERS = ["P1", "P2", "P3"];
 
 /**
@@ -23,32 +27,54 @@ interface ChangeEvent {
  */
 interface TaskTableProps {
     rows: Row[];
-    onChange: (e: ChangeEvent) => void;
-    ref?: React.RefObject<TableRef>;
+    onElementChange: (e: ChangeEvent) => void;
+    onElementDoubleClick: (e: React.MouseEvent) => void;
+    ref: React.RefObject<TableRef>;
 }
 
 /**
  * 
  * @param props ...
  */
-export default function TaskTable({ rows, onChange, ref }: TaskTableProps) {
+export default function TaskTable({ rows, onElementChange, onElementDoubleClick, ref }: TaskTableProps) {
+
+    const [filter, setFilter] = useState<string>("");
 
     console.log("render table");
-    const tasks = rows.filter(row => row.type === "task")
+    const filteredRows = rows.filter(row => filter === "" || row.title.toLowerCase().includes(filter.toLowerCase()));
+    const tasks = rows.filter(row => row.type === "task");
+
+    const getConnectedRows = (row: Row) => {
+        if (row.type !== "task") { return []; }
+
+        const taskIndex = rows.findIndex(r => r.rowID === row.rowID);
+        if (taskIndex === -1) { return []; }
+
+        const startIndex = taskIndex + 1;
+        const foundNextTaskIndex = nextIndex(startIndex, rows, r => r.type === "task");
+        const endIndexExcl = foundNextTaskIndex !== -1 ? foundNextTaskIndex : rows.length;
+        return rows.slice(startIndex, endIndexExcl);
+    };
     
     return (
         <>
+            <InputGroup className='m-1'>
+                <Form.Control placeholder="Search..." value={filter} onChange={e => setFilter(e.target.value)}/>
+                <Button variant="outline-secondary">Search</Button>
+            </InputGroup>
             <Table 
                 ref={ref}
                 headers={ALL_TABLE_HEADERS}
             >
-                {rows.map(row => (
+                {filteredRows.map(row => (
                     <TaskRow 
                         key={row.rowID}
                         row={row} 
                         order={tasks.findIndex(task => task.rowID === row.rowID) + 1} 
                         sellers={ALL_SELLERS} 
-                        onChange={onChange}
+                        connectedRows={getConnectedRows(row)}
+                        onChange={onElementChange}
+                        onDoubleClick={onElementDoubleClick}
                     />
                 ))}
             </Table>
@@ -65,7 +91,9 @@ interface TaskRowProps {
     row: Row;
     order: number;
     sellers: string[];
+    connectedRows: Row[];
     onChange: (e: ChangeEvent) => void;
+    onDoubleClick: (e: React.MouseEvent) => void;
 }
 
 /**
@@ -73,13 +101,15 @@ interface TaskRowProps {
  * @param props 
  * @returns 
  */
-function TaskRow({ row, order, sellers, onChange }: TaskRowProps) {
+function TaskRow({ row, order, sellers, connectedRows, onChange, onDoubleClick }: TaskRowProps) {
     return (
         <Table.Row 
             key={row.rowID}
             id={row.rowID}
-            onEdit={() => {
+            connectedIDs={connectedRows.map(r => r.rowID)}
+            onDoubleClick={e => {
                 console.log("edit task");
+                onDoubleClick(e);
             }}
         >
             {row.type === "task" ? <td/> : <Table.Label value={row.type.slice(0, 1).toLowerCase()}/>}
