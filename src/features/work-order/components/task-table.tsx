@@ -15,7 +15,7 @@ const ALL_SELLERS = ["P1", "P2", "P3"];
 /**
  * 
  */
-interface ChangeEvent {
+export interface ChangeEvent {
     target: "SELLER" | "INSTRUCTION_TIME" | "AMOUNT" | "DISCOUNT" | "UNIT_PRICE" | "TOTAL_PRICE";
     value: string | number;
     id: string;
@@ -40,9 +40,11 @@ export default function TaskTable({ rows, onElementChange, onElementDoubleClick,
 
     const [filter, setFilter] = useState<string>("");
 
-    console.log("render table");
     const filteredRows = rows.filter(row => filter === "" || row.title.toLowerCase().includes(filter.toLowerCase()));
+    const totalPrice = rows.map(row => row.totalPrice).reduce((previousValue, currentValue) => previousValue + currentValue);
     const tasks = rows.filter(row => row.type === "task");
+    
+    console.log("render table");
 
     const getConnectedRows = (row: Row) => {
         if (row.type !== "task") { return []; }
@@ -78,7 +80,7 @@ export default function TaskTable({ rows, onElementChange, onElementDoubleClick,
                     />
                 ))}
             </Table>
-            <p>Total Price</p>
+            <p>Total Price: ${totalPrice}</p>
         </>
     )
 }
@@ -115,12 +117,12 @@ function TaskRow({ row, order, sellers, connectedRows, onChange, onDoubleClick }
             {row.type === "task" ? <td/> : <Table.Label value={row.type.slice(0, 1).toLowerCase()}/>}
             <Table.Select allOptions={sellers} value={row.staffID} onChange={e => onChange({ target: "SELLER", value: e.target.value, id: row.rowID })}/>
             {row.type === "task" ? <Table.Label value={`JOB ${order}: ${row.title}`} className='highlight'/> : <Table.Label value={row.title}/>}
-            {row.type === "work" ? <Table.Input type='number' value={TimeSpan_toString(row.instructionTime)} onChange={e => onChange({ target: "INSTRUCTION_TIME", value: e.target.value, id: row.rowID })}/> : <td/>}
+            {row.type === "work" ? <Table.Input type='number' stepSize={0.1} min={0.01} max={999} value={TimeSpan_toString(row.instructionTime)} onChange={e => onChange({ target: "INSTRUCTION_TIME", value: Number.parseFloat(e.target.value), id: row.rowID })}/> : <td/>}
             {row.type === "work" ? <Table.Label value={TimeSpan_toString(row.clockedTime)}/> : <td/>}
-            {row.type === "part" ? <Table.Input type='number' value={row.amount} onChange={e => onChange({ target: "AMOUNT", value: e.target.value, id: row.rowID })}/> : <td/>}
-            {row.type === "part" || row.type === "work" ? <Table.Input type='number' value={row.unitPrice} onChange={e => onChange({ target: "UNIT_PRICE", value: e.target.value, id: row.rowID })}/> : <td/>}
-            {row.type === "part" || row.type === "work" ? <Table.Input type='number' value={row.discount * 100} onChange={e => onChange({ target: "DISCOUNT", value: e.target.value, id: row.rowID })}/> : <td/>}
-            {row.type === "part" || row.type === "work" ? <Table.Input type='number' value={row.totalPrice} onChange={e => onChange({ target: "TOTAL_PRICE", value: e.target.value, id: row.rowID })}/> : <td/>}
+            {row.type === "part" ? <Table.Input type='number' min={0} max={999} value={row.amount} onChange={e => onChange({ target: "AMOUNT", value: Number.parseFloat(e.target.value), id: row.rowID })}/> : <td/>}
+            {row.type === "part" || row.type === "work" ? <Table.Input type='number' min={0} value={row.unitPrice} onChange={e => onChange({ target: "UNIT_PRICE", value: Number.parseFloat(e.target.value), id: row.rowID })}/> : <td/>}
+            {row.type === "part" || row.type === "work" ? <Table.Input type='number' min={0} max={100} value={row.discount * 100} onChange={e => onChange({ target: "DISCOUNT", value: Number.parseFloat(e.target.value) / 100.0, id: row.rowID })}/> : <td/>}
+            {row.type === "part" || row.type === "work" ? <Table.Input type='number' min={0} value={row.totalPrice} onChange={e => onChange({ target: "TOTAL_PRICE", value: Number.parseFloat(e.target.value), id: row.rowID })}/> : <td/>}
             {row.type === "part" ? <Table.Label value={Date_toString(row.collectDate)}/> : <td/>}
             {row.type === "part" ? <Table.Label value='0'/> : <td/>}
             {row.type === "part" ? <Table.Label value='0'/> : <td/>}
