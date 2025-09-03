@@ -219,6 +219,25 @@ export function replaceRange<T>(array: Array<T>, index: number, elements: Array<
 /**
  * 
  * @param array 
+ * @param mapper 
+ * @returns 
+ */
+export function replaceBy<T>(array: Array<T>, mapper: (element: T) => T | undefined): Array<T> {
+    const copyArray = [ ...array ];
+
+    for (let i = 0; i < copyArray.length; i++) {
+        const replacementElement = mapper(copyArray[i]);
+        if (replacementElement !== undefined) {
+            copyArray[i] = replacementElement;
+        }
+    }
+
+    return copyArray;
+}
+
+/**
+ * 
+ * @param array 
  * @param index 
  * @param count 
  * @param by
@@ -240,6 +259,26 @@ export function moveup<T>(array: Array<T>, index: number, count: number = 1, by:
 /**
  * 
  * @param array 
+ * @param predicate 
+ * @returns
+ */
+export function moveupBy<T>(array: Array<T>, predicate: (element: T) => boolean): Array<T> {
+    let copyArray = [ ...array ];
+
+    for (let i = 0; i < copyArray.length; i++) {
+        if (predicate(copyArray[i])) {
+            const prev = copyArray[i - 1];
+            copyArray[i - 1] = copyArray[i];
+            copyArray[i] = prev;
+        }
+    }
+
+    return copyArray;
+}
+
+/**
+ * 
+ * @param array 
  * @param index 
  * @param count
  * @param by 
@@ -256,4 +295,24 @@ export function movedown<T>(array: Array<T>, index: number, count: number = 1, b
         ...array.slice(index, index + count),
         ...array.slice(index + count + by)
     ];
+}
+
+/**
+ * 
+ * @param array 
+ * @param predicate 
+ * @returns
+ */
+export function movedownBy<T>(array: Array<T>, predicate: (element: T) => boolean): Array<T> {
+    let copyArray = [ ...array ];
+
+    for (let i = copyArray.length - 1; i >= 0; i--) {
+        if (predicate(copyArray[i])) {
+            const prev = copyArray[i + 1];
+            copyArray[i + 1] = copyArray[i];
+            copyArray[i] = prev;
+        }
+    }
+
+    return copyArray;
 }
