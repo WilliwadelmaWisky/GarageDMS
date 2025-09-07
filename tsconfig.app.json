@@ -26,10 +26,11 @@
     /* Custom paths */
     "baseUrl": ".",
     "paths": {
+      "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@features/*": ["./src/features/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@datatypes/*": ["./src/types/*"],
+      "@dtypes/*": ["./src/types/*"],
       "@utils/*": ["./src/utils/*"]
     }
   },

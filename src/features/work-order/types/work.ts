@@ -1,5 +1,3 @@
-import type { TimeSpan } from "@datatypes/timespan";
-
 /**
  * 
  */
@@ -9,8 +7,8 @@ export type Work = {
     TaskID: string,
     StaffID: string,
     Description: string,
-    InstructionTime: TimeSpan,
-    ClockedTime: TimeSpan,
+    InstructionTime: Date,
+    ClockedTime: Date,
     Discount: number,
     UnitPrice: number,
 }

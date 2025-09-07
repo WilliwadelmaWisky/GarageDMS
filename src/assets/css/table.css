@@ -4,9 +4,6 @@ table {
     overflow-y: auto;
     white-space: nowrap;
 }
-/* table > tbody > tr:nth-child(odd) {
-  background-color: rgb(240, 240, 240);
-} */
 th {
     padding: 10px 10px;
     background-color: rgb(180, 180, 180);
@@ -35,16 +32,4 @@ td > select {
     height: 100%;
     background: none;
     border: none;
-}
-
-.highlight {
-    font-weight: bold;
-    color: blue;
-}
-.wide {
-    min-width: 15em;
-    width: 30em;
-}
-.selected {
-    background-color: rgb(155, 195, 235);
 }
