@@ -5,10 +5,19 @@ export interface Task {
     id: string;
     title: string;
     description: string;
-    work: Work[];
-    parts: Part[];
-    report?: string;
+    works: Work[];
+    parts?: Part[];
+    reports?: Report[];
     invoice?: string;
+}
+
+/**
+ * 
+ */
+export interface Report {
+    mechanic: string;
+    value: string;
+    date: Date;
 }
 
 /**

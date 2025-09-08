@@ -1,7 +1,36 @@
 input {
-    width: 10em;
+    width: 8em;
 }
 
 .label {
-    width: 10em;
+    width: 8em;
+}
+
+
+.body-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.report-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 30%;
+}
+
+@media screen and (max-width: 900px) {
+    .body-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .report-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        width: auto;
+    }
 }

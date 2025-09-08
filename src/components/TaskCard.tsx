@@ -1,7 +1,8 @@
 import type { Task } from "@dtypes/task"
-import { Badge, ListGroup } from "react-bootstrap";
+import { Alert, Badge, ListGroup, Toast, ToastContainer } from "react-bootstrap";
 import Accordion from "react-bootstrap/esm/Accordion";
 import "@assets/css/task-card.css";
+import { format } from "date-fns";
 
 /**
  * 
@@ -16,62 +17,95 @@ interface TaskCardProps {
  */
 export default function TaskCard({ task }: TaskCardProps) {
 
+    const isInvoiced = task.invoice !== undefined;
+    const hasWorks = task.works.length > 0;
+    const hasParts = task.parts !== undefined && task.parts.length > 0;
+    const hasReports = task.reports !== undefined && task.reports.length > 0;
+
     return (
         <Accordion alwaysOpen>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>{task.invoice ? <>{task.title} <Badge bg="success">Warranty</Badge><Badge>Invoiced</Badge></> : task.title}</Accordion.Header>
                 <Accordion.Body>
-                    {task.description}
-
-                    <div className="fw-bold d-flex justify-content-between mt-4 mb-2">
-                        Work
-                        <div className="d-flex justify-content-between gap-2 pe-5">
-                            <span className="label">Time</span>
-                            <span className="label">Hourly rate</span>
-                            <span className="label">Discount</span>
-                            <span className="label">Total price</span>
+                    <div className="body-container">
+                        <div className="flex-fill">
+                            {task.description}
+                            {hasWorks && (
+                                <>
+                                    <div className="fw-bold d-flex justify-content-between mt-4 mb-2">
+                                        Work
+                                        <div className="d-flex justify-content-between gap-2 pe-5">
+                                            <span className="label">Time</span>
+                                            <span className="label">Hourly rate</span>
+                                            <span className="label">Discount</span>
+                                            <span className="label">Total price</span>
+                                        </div>
+                                    </div>
+                                    <ListGroup>
+                                        {task.works.map(w => (
+                                            <ListGroup.Item key={w.id} className="d-flex justify-content-between">
+                                                {w.title}
+                                                <div className="d-flex justify-content-between gap-2">
+                                                    <input type="number" disabled={isInvoiced} value={w.expectedDuration}/>
+                                                    <input type="number" disabled={isInvoiced} value={w.hourlyRate}/>
+                                                    <input type="number" disabled={isInvoiced} value={w.discount * 100}/>
+                                                    <input type="number" disabled={isInvoiced} value={w.expectedDuration * w.hourlyRate * (1 - w.discount)}/>
+                                                    <button>...</button>
+                                                </div>
+                                            </ListGroup.Item>
+                                        ))}
+                                    </ListGroup>
+                                </>
+                            )}
+                            
+                            {hasParts && (
+                                <>
+                                    <div className="fw-bold d-flex justify-content-between mt-4 mb-2">
+                                        Part
+                                        <div className="d-flex justify-content-between gap-2 pe-5">
+                                            <span className="label">Amount</span>
+                                            <span className="label">Unit price</span>
+                                            <span className="label">Discount</span>
+                                            <span className="label">Total price</span>
+                                        </div>
+                                    </div>
+                                    <ListGroup>
+                                        {task.parts!.map(part => (
+                                            <ListGroup.Item className="d-flex justify-content-between">
+                                                {part.name}
+                                                <div className="d-flex justify-content-between gap-2">
+                                                    <input type="number" disabled={isInvoiced} value={part.amount}/>
+                                                    <input type="number" disabled={isInvoiced} value={part.unitPrice}/>
+                                                    <input type="number" disabled={isInvoiced} value={part.discount * 100}/>
+                                                    <input type="number" disabled={isInvoiced} value={part.amount * part.unitPrice * (1 - part.discount)}/>
+                                                    <button>...</button>
+                                                </div>
+                                            </ListGroup.Item>
+                                        ))}
+                                    </ListGroup>
+                                </>
+                            )}
                         </div>
-                    </div>
-                    <ListGroup>
-                        {task.work.map(w => (
-                            <ListGroup.Item key={w.id} className="d-flex justify-content-between">
-                                {w.title}
-                                <div className="d-flex justify-content-between gap-2">
-                                    <input type="number" value={w.expectedDuration}/>
-                                    <input type="number" value={w.hourlyRate}/>
-                                    <input type="number" value={w.discount}/>
-                                    <input type="number" value={w.expectedDuration * w.hourlyRate * (1 - w.discount)}/>
-                                    <button>...</button>
+                        
+                        {hasReports && (
+                            <div className="report-container">
+                                Reports of Mechanics
+                                <div className="d-flex flex-column gap-2">
+                                    {task.reports!.map(report => (
+                                        <Toast key={report.date.toString()} className="w-100">
+                                            <Toast.Header closeButton={false}>
+                                                <strong className="me-auto">{report.mechanic}</strong>
+                                                <strong>{format(report.date, "d.M.yyyy")}</strong>
+                                            </Toast.Header>
+                                            <Toast.Body>
+                                                {report.value}
+                                            </Toast.Body>
+                                        </Toast>
+                                    ))}
                                 </div>
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup>
-
-                    <div className="fw-bold d-flex justify-content-between mt-4 mb-2">
-                        Part
-                        <div>
-                            Amount
-                            Unit price
-                            Discount
-                            Total price
-                        </div>
-                    </div>
-                    <ListGroup>
-                        <ListGroup.Item className="d-flex justify-content-between">
-                            Cras justo odio
-                            <div>
-                                <input type="number" value={1.50}/>
-                                <input type="number" value={1.50}/>
-                                <input type="number" value={1.50}/>
-                                <input type="number" value={1.50}/>
-                                <button>...</button>
                             </div>
-                        </ListGroup.Item>
-                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                        <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                        <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-                    </ListGroup>
+                        )}
+                    </div>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
