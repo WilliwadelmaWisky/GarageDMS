@@ -12,7 +12,7 @@ function App() {
         id: "hello", 
         description: "The service including all the checks as well as the oil change. The service including all the checks as well as the oil change. The service including all the checks as well as the oil change. The service including all the checks as well as the oil change.", 
         title: "2. Year Service", 
-        invoice: "he", 
+        //invoice: "he", 
         reports: [
           { mechanic: "Yes", value: "Replaced the evaporator, no leaks found, the air conditioning is working as expected.", date: new Date() },
           { mechanic: "Yes", value: "The air-conditioner piping checked, no leaks.\nThe leak is coming from the evaporator.", date: new Date() },
@@ -25,7 +25,9 @@ function App() {
         parts: [
           {id: "1", name: "5w30 C3", amount: 5.2, unitPrice: 25, discount: 0},
           {id: "1", name: "Oil Filter", amount: 1, unitPrice: 25, discount: 0}
-        ]}}
+        ],
+        isWarranty: true
+        }}
       />
       <TaskCard task={{
         id: "hello", 

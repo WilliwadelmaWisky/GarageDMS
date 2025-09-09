@@ -9,6 +9,7 @@ export interface Task {
     parts?: Part[];
     reports?: Report[];
     invoice?: string;
+    isWarranty?: boolean;
 }
 
 /**
