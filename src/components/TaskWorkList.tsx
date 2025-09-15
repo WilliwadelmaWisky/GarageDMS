@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import type { Work } from "@dtypes/task";
 import Dropdown from "react-bootstrap/esm/Dropdown";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import ListGroup from "react-bootstrap/esm/ListGroup";
-import TaskWorkModal from "./TaskWorkModal";
+import TaskWorkModal, { type ModalRef } from "./TaskWorkModal";
+import { discount, total } from "@utils/cost-util";
+import { add, replace } from "@utils/array-util";
+import { v4 as uuidv4 } from "uuid";
+import useModal from "@hooks/useModal";
 
 /**
  * 
  */
 interface ChangeEvent {
-    value: Work;
+    value: Work[];
 }
 
 /**
@@ -29,7 +33,7 @@ interface TaskWorkListProps {
  */
 export default function TaskWorkList({ works, onChange, disabled, className }: TaskWorkListProps) {
 
-    const [isModalShown, setIsModalShown] = useState<boolean>(false);
+    const modalRef = useRef<ModalRef>({ show: () => {}, hide: () => {} });
 
     /**
      * 
@@ -54,17 +58,30 @@ export default function TaskWorkList({ works, onChange, disabled, className }: T
                 clone.discount = value;
                 break;
             case "SET_TOTAL_PRICE":
-                clone.discount = 1 - value / (target.expectedDuration * target.hourlyRate)
+                clone.discount = discount(target.hourlyRate, value, target.expectedDuration);
                 break;
         }
 
-        onChange({ value: clone });
+        const index = works.findIndex(w => w.id === target.id);
+        onChange({ value: replace(works, index, clone) });
+    };
+
+    const handleAdd = () => {
+        if (onChange === undefined) {
+            return;
+        }
+
+        const newWork: Work = { id: uuidv4(), title: "", expectedDuration: 1, actualDuration: 0, hourlyRate: 100, discount: 0 };
+        modalRef.current.show(newWork);
     };
 
     return (
         <div className={className}>
-            <div className="fw-bold d-flex justify-content-between mt-4 mb-2">
-                Work
+            <div className="fw-bold d-flex justify-content-between align-items-center mt-4 mb-2">
+                <div className="d-flex gap-2 align-items-center">
+                    Work
+                    <span className="link-button" onClick={handleAdd}>+</span>
+                </div>
                 <div className="d-flex justify-content-between gap-2 pe-5">
                     <span className="label">Time</span>
                     <span className="label">Hourly rate</span>
@@ -80,11 +97,11 @@ export default function TaskWorkList({ works, onChange, disabled, className }: T
                             <input type="number" disabled={disabled} value={work.expectedDuration} onChange={e => handleChange(work,"SET_DURATION", Number.parseFloat(e.target.value))} min={0}/>
                             <input type="number" disabled={disabled} value={work.hourlyRate} onChange={e => handleChange(work, "SET_HOURLY_RATE", Number.parseFloat(e.target.value))} min={0}/>
                             <input type="number" disabled={disabled} value={work.discount * 100} onChange={e => handleChange(work, "SET_DISCOUNT", Number.parseFloat(e.target.value) * 0.01)} min={0} max={100}/>
-                            <input type="number" disabled={disabled} value={work.expectedDuration * work.hourlyRate * (1 - work.discount)} onChange={e => handleChange(work, "SET_TOTAL_PRICE", Number.parseFloat(e.target.value))} min={0}/>
+                            <input type="number" disabled={disabled} value={total(work.hourlyRate, work.expectedDuration, work.discount)} onChange={e => handleChange(work, "SET_TOTAL_PRICE", Number.parseFloat(e.target.value))} min={0}/>
                             <Dropdown>
                                 <Dropdown.Toggle disabled={disabled}>...</Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <DropdownItem onClick={() => setIsModalShown(true)}>Edit</DropdownItem>
+                                    <DropdownItem onClick={() => modalRef.current.show(work)}>Edit</DropdownItem>
                                     <DropdownItem>Delete</DropdownItem>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -93,8 +110,8 @@ export default function TaskWorkList({ works, onChange, disabled, className }: T
                 ))}
             </ListGroup>
             <TaskWorkModal 
-                show={isModalShown} 
-                onHide={() => setIsModalShown(false)} 
+                ref={modalRef}
+                //onAccept={}
             />
         </div>
     );

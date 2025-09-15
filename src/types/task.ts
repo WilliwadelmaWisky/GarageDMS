@@ -16,6 +16,7 @@ export interface Task {
  * 
  */
 export interface Report {
+    id: string;
     mechanic: string;
     value: string;
     date: Date;

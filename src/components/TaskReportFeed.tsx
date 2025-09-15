@@ -22,7 +22,7 @@ export default function TaskReportFeed({ reports, className }: TaskReportFeedPro
             <strong>Reports of Mechanics</strong>
             <div className="d-flex flex-column gap-2">
                 {reports.map(report => (
-                    <Toast key={report.date.toString()} className="w-100">
+                    <Toast key={report.id} className="w-100">
                         <Toast.Header closeButton={false}>
                             <strong className="me-auto">{report.mechanic}</strong>
                             <strong>{format(report.date, "d.M.yyyy")}</strong>

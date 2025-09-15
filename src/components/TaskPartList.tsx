@@ -20,9 +20,12 @@ interface TaskPartListProps {
 export default function TaskPartList({ parts, disabled, className }: TaskPartListProps) {
     return (
         <div className={className}>
-            <div className="fw-bold d-flex justify-content-between mt-4 mb-2">
-                Part
-                <div className="d-flex justify-content-between gap-2 pe-5">
+            <div className="fw-bold d-flex justify-content-between align-items-center mt-4 mb-2">
+                <div className="d-flex gap-2 align-items-center">
+                    Parts
+                    <span className="link-button">+</span>
+                </div>
+                <div className="d-flex justify-content-between align-items-center gap-2 pe-5">
                     <span className="label">Amount</span>
                     <span className="label">Unit price</span>
                     <span className="label">Discount</span>

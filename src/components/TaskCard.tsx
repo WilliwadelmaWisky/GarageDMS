@@ -42,18 +42,18 @@ export default function TaskCard({ task, onChange }: TaskCardProps) {
      * 
      * @param e 
      */
-    const handleChange = (action: "SET_WORK" | "SET_PART", value: Work | Part) => {
+    const handleChange = (action: "SET_WORK" | "SET_PART", value: Work[] | Part[]) => {
         if (onChange === undefined) {
             return;
         }
 
-        console.log(action, value);
-
         let clone: Task = { ...task };
         switch (action) {
             case "SET_WORK":
+                clone.works = value as Work[];
                 break;
             case "SET_PART":
+                clone.parts = value as Part[];
                 break;
         }
 
