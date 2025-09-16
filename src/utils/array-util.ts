@@ -86,11 +86,11 @@ export function nextIndex<T>(startIndex: number, array: Array<T>, predicate: (el
 
 /**
  * 
- * @param element 
  * @param array 
+ * @param element 
  * @returns 
  */
-export function add<T>(element: T, array: Array<T>): Array<T> {
+export function add<T>(array: Array<T>, element: T): Array<T> {
     return [
         ...array,
         element

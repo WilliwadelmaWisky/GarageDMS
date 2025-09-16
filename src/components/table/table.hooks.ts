@@ -1,5 +1,5 @@
-import type { TableColumnData } from "@dtypes/table";
 import { createContext, useContext } from "react";
+import type { TableColumnData } from "./table.types";
 
 /**
  * 

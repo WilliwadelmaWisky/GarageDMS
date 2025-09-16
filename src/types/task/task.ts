@@ -5,7 +5,7 @@ export interface Task {
     id: string;
     title: string;
     description: string;
-    works: Work[];
+    works?: Work[];
     parts?: Part[];
     reports?: Report[];
     invoice?: string;

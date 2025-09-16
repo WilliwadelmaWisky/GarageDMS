@@ -1,5 +1,5 @@
-import TaskList from "@components/TaskList"
-import type { Task } from "@dtypes/task";
+import TaskList from "@components/task/TaskList"
+import type { Task } from "@dtypes/task/task";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 

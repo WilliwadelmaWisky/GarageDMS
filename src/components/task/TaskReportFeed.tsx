@@ -1,4 +1,4 @@
-import type { Report } from "@dtypes/task";
+import type { Report } from "@dtypes/task/task";
 import { format } from "date-fns/format";
 import Toast from "react-bootstrap/esm/Toast";
 

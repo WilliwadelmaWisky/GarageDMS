@@ -1,4 +1,4 @@
-import type { Task } from "@dtypes/task";
+import type { Task } from "@dtypes/task/task";
 import TaskCard from "./TaskCard";
 import Button from "react-bootstrap/esm/Button";
 import { replace } from "@utils/array-util";

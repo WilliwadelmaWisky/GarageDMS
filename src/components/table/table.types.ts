@@ -40,3 +40,10 @@ export interface TableCellData {
     col: string;
     value: string | number;
 }
+
+/**
+ * 
+ */
+export interface Filter<T> {
+    match: (target: T) => boolean;
+}

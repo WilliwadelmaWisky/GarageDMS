@@ -1,10 +1,9 @@
 import { useImperativeHandle, useState } from 'react';
-import { TableContext } from '@hooks/useTableContext';
-import type { TableCellData, TableColumnData, TableData, TableRef, TableRowData } from '@dtypes/table';
+import { TableContext } from './table.hooks';
+import type { TableCellData, TableColumnData, TableData, TableRef, TableRowData, Filter } from './table.types';
 import TableHead from './TableHead';
 import TableRow from './TableRow';
-import './table.css';
-import type { Filter } from '@dtypes/filter';
+import '@assets/css/table/table.css';
 
 
 /**
