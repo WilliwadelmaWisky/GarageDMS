@@ -6,6 +6,7 @@ import ListGroup from "react-bootstrap/esm/ListGroup";
 import TaskPartModal from "./TaskPartModal";
 import { useRef } from "react";
 import type { ModalRef } from "@hooks/useModal";
+import NumberInputField from "@components/form/NumberInputField";
 
 /**
  * 
@@ -60,7 +61,7 @@ export default function TaskPartList({ parts, disabled, className }: TaskPartLis
                 <Alert variant="light">No Works</Alert>
             )}
 
-            <TaskPartModal ref={modalRef}/>
+            {false && <TaskPartModal ref={modalRef}/>}
         </div>
     );
 }
@@ -84,7 +85,7 @@ function TaskPartListEntry({ part, disabled }: TaskPartListEntryProps) {
         <ListGroup.Item className="d-flex justify-content-between align-items-center">
             {part.name}
             <div className="d-flex justify-content-between gap-2">
-                <input type="number" disabled={disabled} value={part.amount}/>
+                <NumberInputField disabled={disabled} value={part.amount} min={0} max={100}/>
                 <input type="number" disabled={disabled} value={part.unitPrice}/>
                 <input type="number" disabled={disabled} value={part.discount * 100}/>
                 <input type="number" disabled={disabled} value={part.amount * part.unitPrice * (1 - part.discount)}/>

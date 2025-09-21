@@ -1,4 +1,4 @@
-import "@assets/css/task-card.css";
+import "@assets/css/task/task-card.css";
 import type { Part, Task, Work } from "@dtypes/task/task"
 import Accordion from "react-bootstrap/esm/Accordion";
 import Badge from "react-bootstrap/esm/Badge";
