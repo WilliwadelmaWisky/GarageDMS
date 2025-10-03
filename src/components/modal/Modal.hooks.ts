@@ -52,15 +52,21 @@ function reducer<T>(state: ModalState<T>, action: Action<T>): ModalState<T> {
 
 /**
  * 
- * @param initial 
+ * @param ref 
+ * @param initialState 
+ * @returns
  */
-export function useModal<T>(ref: React.RefObject<ModalRef<T>>, initial: ModalState<T>): [ModalState<T>, React.ActionDispatch<[action: Action<T>]>] {
+export function useModal<T>(ref: React.RefObject<ModalRef<T>>, initialState: ModalState<T>): [ModalState<T>, React.ActionDispatch<[action: Action<T>]>] {
 
-    const [state, dispatch] = useReducer(reducer, initial);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useImperativeHandle(ref, () => ({
-        show(data: T) { dispatch({ type: "SHOW", payload: data }); },
-        hide() { dispatch({ type: "HIDE" }); },
+        show(data: T) { 
+            dispatch({ type: "SHOW", payload: data }); 
+        },
+        hide() { 
+            dispatch({ type: "HIDE" }); 
+        },
     }));
 
     return [state, dispatch];

@@ -1,45 +1,13 @@
 import { clamp } from "@utils/math-util";
-import { useReducer } from "react";
-
-/**
- * 
- */
-interface InputFieldState {
-    value: string;
-    isFocused: boolean;
-}
-
-/**
- * 
- */
-interface Action {
-    type: "FOCUS" | "UNFOCUS" | "UPDATE";
-    payload?: string;
-}
-
-/**
- * 
- * @param state 
- * @param action 
- * @returns 
- */
-function reducer(state: InputFieldState, action: Action): InputFieldState {
-    switch (action.type) {
-        case "FOCUS":
-            return { ...state, isFocused: true, value: action.payload! };
-        case "UNFOCUS":
-            return { ...state, isFocused: false, value: "" };
-        case "UPDATE":
-            return { ...state, value: action.payload! };
-    }
-}
+import { useInputField } from "./InputField.hooks";
 
 /**
  * 
  */
 interface NumberInputFieldProps {
     value: number;
-    onChange?: (value: number) => void; 
+    onChange?: (value: number) => void;
+    onReturn?: (value: number) => void;
     min?: number;
     max?: number;
     decimalCount?: number; 
@@ -54,15 +22,14 @@ interface NumberInputFieldProps {
 export default function NumberInputField({ 
     value, 
     onChange = function() {}, 
+    onReturn = function() {},
     min = Number.MIN_SAFE_INTEGER, 
     max = Number.MAX_SAFE_INTEGER, 
     decimalCount = 2,
-    disabled
+    disabled = false,
 }: NumberInputFieldProps) {
 
-    const [state, dispatch] = useReducer(reducer, { value: "", isFocused: false });
-
-    const numberToString = (n: number) => n.toString();
+    const { state, dispatch } = useInputField();
     const allowNegatives = min < 0;
 
     /**
@@ -71,7 +38,7 @@ export default function NumberInputField({
      */
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === "" || (e.target.value === "-" && allowNegatives)) {
-            dispatch({ type: "UPDATE", payload: e.target.value });
+            dispatch({ ACTION_TYPE: "UPDATE", value: e.target.value });
             onChange(0);
             return;
         }
@@ -81,9 +48,21 @@ export default function NumberInputField({
             const valueNumber = Number.parseFloat(e.target.value);
             const clampedValueNumber = clamp(valueNumber, min, max);
             const payload = value > clampedValueNumber ? numberToString(clampedValueNumber) : e.target.value;
-            dispatch({ type: "UPDATE", payload: payload });
+            dispatch({ ACTION_TYPE: "UPDATE", value: payload });
             onChange(clampedValueNumber);
         }
+    }
+
+    /**
+     * 
+     * @param e 
+     */
+    const handleKeyUp = (e: React.KeyboardEvent) => {
+        console.log("onReturn: ", e.key);
+        if (e.key !== "Enter") { return; }
+
+        const valueNumber = Number.parseFloat(state.value);
+        onReturn(valueNumber);
     }
 
     return (
@@ -92,8 +71,18 @@ export default function NumberInputField({
             value={state.isFocused ? state.value : value}
             disabled={disabled}
             onChange={handleChange}
-            onFocus={() => dispatch({ type: "FOCUS", payload: numberToString(value) })} 
-            onBlur={() => dispatch({ type: "UNFOCUS" })}
+            onFocus={() => dispatch({ ACTION_TYPE: "FOCUS", value: numberToString(value) })} 
+            onBlur={() => dispatch({ ACTION_TYPE: "UNFOCUS" })}
+            onKeyUp={handleKeyUp}
         />
     );
 }
+
+/**
+ * 
+ * @param n 
+ * @returns 
+ */
+function numberToString(n: number) {
+    return n.toString();
+} 

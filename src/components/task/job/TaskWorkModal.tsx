@@ -6,7 +6,7 @@ import Modal from "react-bootstrap/esm/Modal";
 /**
  * 
  */
-interface TaskWorkModalProps {
+interface JobModalProps {
     ref: React.RefObject<ModalRef<Work>>;
     onAccept?: (work: Work) => void;
 }
@@ -16,7 +16,7 @@ interface TaskWorkModalProps {
  * @param param0 
  * @returns 
  */
-export default function TaskWorkModal({ onAccept, ref }: TaskWorkModalProps) {
+export default function JobModal({ onAccept, ref }: JobModalProps) {
 
     const [state, dispatch] = useModal<Work>(ref, { visible: false });
 

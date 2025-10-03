@@ -2,45 +2,26 @@
  * 
  */
 export interface Task {
-    id: string;
+    taskID: string;
     title: string;
     description: string;
-    works?: Work[];
-    parts?: Part[];
-    reports?: Report[];
-    invoice?: string;
-    isWarranty?: boolean;
+    isWarranty: boolean;
 }
 
-/**
- * 
- */
-export interface Report {
-    id: string;
-    mechanic: string;
-    value: string;
-    date: Date;
+
+export function isTaskInvoiced(taskID: string): boolean {
+    console.log("isTaskInvoiced called! not implemented.");
+    return false;
 }
 
-/**
- * 
- */
-export interface Work {
-    id: string;
-    title: string;
-    expectedDuration: number;
-    actualDuration: number;
-    hourlyRate: number;
-    discount: number;
-}
+export function calcTaskTotal(taskID: string): number {
 
-/**
- * 
- */
-export interface Part {
-    id: string;
-    name: string;
-    amount: number;
-    unitPrice: number;
-    discount: number;
+    /*
+    const totalWorkPrice = hasWorks ? task.works!.map(w => w.expectedDuration * w.hourlyRate * (1 - w.discount)).reduce((prev, current) => prev + current) : 0;
+    const totalPartPrice = hasParts ? task.parts!.map(p => p.amount * p.unitPrice * (1 - p.discount)).reduce((prev, current) => prev + current) : 0;
+    const totalPrice = totalWorkPrice + totalPartPrice;
+    */
+
+    console.log("calcTaskTotal called! not implemented.");
+    return 0;
 }
